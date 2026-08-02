@@ -22,5 +22,8 @@
     "eslint-config-next": "16.2.12",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "author": "Abhishek Jha",
+  "description": "Share media with your team seamlessly.",
+  "license": "ISC"
 }
