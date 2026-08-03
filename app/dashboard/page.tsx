@@ -224,8 +224,8 @@ function DashboardContent() {
       )}
 
       {/* Header */}
-      <div className="h-16 border-b border-black/5 dark:border-white/5 flex items-center justify-between px-8 bg-background sticky top-0 z-10">
-        <div className="flex items-center gap-4">
+      <div className="h-16 border-b border-black/5 dark:border-white/5 flex items-center justify-between px-4 md:px-8 bg-background sticky top-0 z-10">
+        <div className="flex items-center gap-2 md:gap-4">
           {folderHistory.length > 0 && (
             <button onClick={handleBack} className="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg transition-colors">
               <ArrowLeft01Icon className="w-5 h-5 text-muted-foreground" />
@@ -233,8 +233,9 @@ function DashboardContent() {
           )}
           <h1 className="text-xl font-medium text-foreground tracking-tight">{currentFolderName}</h1>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="relative flex items-center">
+        <div className="flex items-center gap-2 md:gap-4">
+          {/* Desktop Search Input */}
+          <div className="relative hidden md:flex items-center">
             <Search01Icon className="w-4 h-4 absolute left-3 text-muted-foreground" />
             <input
               type="text"
@@ -243,32 +244,42 @@ function DashboardContent() {
               placeholder="Search file..."
               className="pl-9 pr-12 py-2 bg-black/5 dark:bg-white/5 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 w-64 transition-all"
             />
-            <div className="absolute right-3 pointer-events-none hidden md:flex items-center">
+            <div className="absolute right-3 pointer-events-none flex items-center">
               <kbd className="flex items-center gap-0.5 text-[10px] font-medium text-muted-foreground/60 bg-black/5 dark:bg-white/5 px-1.5 py-0.5 rounded border border-black/10 dark:border-white/10 font-mono">
                 <span className="text-[11px]">⌘</span>K
               </kbd>
             </div>
           </div>
+          {/* Mobile Search Button */}
+          <button
+            onClick={() => router.push("/dashboard/search")}
+            className="flex md:hidden p-2 rounded-full text-muted-foreground hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+            title="Search"
+          >
+            <Search01Icon className="w-5 h-5" />
+          </button>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsCreateFolderOpen(true)}
-              className="flex items-center gap-2 bg-black/5 dark:bg-white/5 text-foreground px-4 py-2 rounded-full text-sm font-medium hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+              className="flex items-center gap-2 bg-black/5 dark:bg-white/5 text-foreground px-3 md:px-4 py-2 rounded-full text-sm font-medium hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+              title="New Folder"
             >
               <FolderAddIcon className="w-4 h-4" />
-              New Folder
+              <span className="hidden sm:inline">New Folder</span>
             </button>
             <button
               onClick={() => setIsUploadOpen(true)}
-              className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-full text-sm font-medium hover:bg-primary/90 transition-colors"
+              className="flex items-center gap-2 bg-primary text-primary-foreground px-3 md:px-4 py-2 rounded-full text-sm font-medium hover:bg-primary/90 transition-colors"
+              title="Upload File"
             >
               <CloudUploadIcon className="w-4 h-4" />
-              Upload File
+              <span className="hidden sm:inline">Upload File</span>
             </button>
           </div>
         </div>
       </div>
 
-      <div className="p-8 flex flex-col gap-10">
+      <div className="p-4 md:p-8 flex flex-col gap-10">
         {!currentFolderId && (
           <WelcomeBoard workspaceId={activeWorkspaceId} />
         )}

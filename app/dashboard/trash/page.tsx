@@ -103,7 +103,7 @@ export default function TrashPage() {
 
   return (
     <div className="flex-1 overflow-y-auto bg-background flex flex-col">
-      <div className="h-16 border-b border-black/5 dark:border-white/5 flex items-center justify-between px-8 bg-background sticky top-0 z-10">
+      <div className="h-16 border-b border-black/5 dark:border-white/5 flex items-center justify-between px-4 md:px-8 bg-background sticky top-0 z-10">
         <h1 className="text-xl font-medium text-foreground tracking-tight">Trash Bin</h1>
         {files.length > 0 && (
           <div className="flex items-center gap-3">
@@ -127,7 +127,7 @@ export default function TrashPage() {
         )}
       </div>
 
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         {loading ? (
           <div className="text-muted-foreground animate-pulse">Loading trash...</div>
         ) : error ? (

@@ -33,7 +33,7 @@ const mainNav = [
   { name: "Trash", href: "/dashboard/trash", icon: Delete02Icon },
 ];
 
-export function Sidebar() {
+export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
   const { activeWorkspaceId, workspaces } = useWorkspaceStore();
@@ -82,6 +82,7 @@ export function Sidebar() {
               <Link
                 key={item.name}
                 href={item.href}
+                onClick={() => onNavigate?.()}
                 className={cn(
                   "flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors group",
                   isActive
@@ -125,6 +126,7 @@ export function Sidebar() {
               href="/dashboard/settings"
               className="p-2 rounded-lg text-muted-foreground hover:bg-black/5 dark:hover:bg-white/5 hover:text-foreground transition-colors"
               title="Settings"
+              onClick={() => onNavigate?.()}
             >
               <Settings02Icon className="w-5 h-5" />
             </Link>

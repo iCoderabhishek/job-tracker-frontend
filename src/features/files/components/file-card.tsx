@@ -89,7 +89,7 @@ export function FileCard({
         }
       }}
       className={cn(
-        "group relative flex flex-col p-4 bg-background border rounded-2xl cursor-pointer transition-all h-[200px]",
+        "group relative flex flex-col p-3 md:p-4 bg-background border rounded-2xl cursor-pointer transition-all aspect-square md:h-[200px] md:aspect-auto",
         isSelected 
           ? "border-primary shadow-sm bg-primary/5" 
           : "border-black/5 dark:border-white/5 hover:shadow-lg hover:-translate-y-1"
@@ -121,9 +121,13 @@ export function FileCard({
         </div>
       )}
       
-      <div className="absolute top-2 right-2 z-10">
-        <Menu as="div" className="relative" onClick={(e) => e.stopPropagation()}>
-          <MenuButton className="p-1.5 rounded-md text-foreground bg-white/50 dark:bg-black/50 backdrop-blur-sm hover:bg-black/5 dark:hover:bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+      <div 
+        className="absolute top-2 right-2 z-10"
+        onClick={(e) => e.stopPropagation()}
+        onPointerDown={(e) => e.stopPropagation()}
+      >
+        <Menu as="div" className="relative">
+          <MenuButton className="p-1.5 md:p-1.5 rounded-full text-foreground bg-background/80 hover:bg-background shadow-sm border border-black/10 dark:border-white/10 backdrop-blur-md opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all cursor-pointer">
             <MoreVerticalIcon className="w-5 h-5" />
           </MenuButton>
           <Transition

@@ -71,7 +71,7 @@ export default function ExportsPage() {
 
   return (
     <div className="flex-1 flex flex-col h-full bg-[#FDFDFD] dark:bg-[#0A0A0A]">
-      <div className="h-16 border-b border-black/5 dark:border-white/5 flex items-center justify-between px-8 bg-background sticky top-0 z-10 shrink-0">
+      <div className="h-16 border-b border-black/5 dark:border-white/5 flex items-center justify-between px-4 md:px-8 bg-background sticky top-0 z-10 shrink-0">
         <div>
           <h1 className="text-xl font-bold tracking-tight text-foreground">Exports</h1>
           <p className="text-sm text-muted-foreground">Manage and download your exported files.</p>
@@ -79,7 +79,7 @@ export default function ExportsPage() {
       </div>
 
       {error && (
-        <div className="mx-8 mt-6 p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl flex items-center justify-between border border-red-100 dark:border-red-900/30">
+        <div className="mx-4 md:mx-8 mt-6 p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl flex items-center justify-between border border-red-100 dark:border-red-900/30">
           <div className="flex items-center gap-3">
             <Alert01Icon className="w-5 h-5" />
             <p className="text-sm font-medium">{error}</p>
@@ -90,7 +90,7 @@ export default function ExportsPage() {
         </div>
       )}
 
-      <div className="p-8 overflow-y-auto">
+      <div className="p-4 md:p-8 overflow-y-auto">
         {loading && exports.length === 0 ? (
           <div className="flex items-center gap-2 text-muted-foreground">
             <RefreshIcon className="w-4 h-4 animate-spin" />

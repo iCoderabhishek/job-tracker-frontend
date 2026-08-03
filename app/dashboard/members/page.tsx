@@ -33,7 +33,7 @@ export default function MembersPage() {
 
   return (
     <div className="flex-1 overflow-y-auto bg-background flex flex-col">
-      <div className="h-16 border-b border-black/5 dark:border-white/5 flex items-center justify-between px-8 bg-background sticky top-0 z-10">
+      <div className="h-16 border-b border-black/5 dark:border-white/5 flex items-center justify-between px-4 md:px-8 bg-background sticky top-0 z-10">
         <h1 className="text-xl font-medium text-foreground tracking-tight">Members</h1>
         {isOwner && (
           <button
@@ -46,14 +46,14 @@ export default function MembersPage() {
         )}
       </div>
 
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         {isLoading ? (
           <div className="text-muted-foreground">Loading members...</div>
         ) : error ? (
           <div className="text-red-500">{error.message}</div>
         ) : (
-          <div className="bg-background border border-black/5 dark:border-white/5 rounded-2xl overflow-hidden">
-            <table className="w-full text-left text-sm">
+          <div className="bg-background border border-black/5 dark:border-white/5 rounded-2xl overflow-x-auto">
+            <table className="w-full text-left text-sm min-w-[500px]">
               <thead className="bg-black/5 dark:bg-white/5 text-muted-foreground">
                 <tr>
                   <th className="px-6 py-4 font-medium">Name</th>

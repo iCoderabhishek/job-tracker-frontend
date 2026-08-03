@@ -16,11 +16,15 @@ export function FolderCard({ folder, onClick, onRename, onDelete, onMove, onShar
   return (
     <div
       onClick={onClick}
-      className="group relative flex flex-col items-center justify-center p-6 bg-background border border-black/5 dark:border-white/5 rounded-2xl cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all"
+      className="group relative flex flex-col items-center justify-center p-4 md:p-6 bg-background border border-black/5 dark:border-white/5 rounded-2xl cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all"
     >
-      <div className="absolute top-2 right-2">
-        <Menu as="div" className="relative" onClick={(e) => e.stopPropagation()}>
-          <MenuButton className="p-1.5 rounded-md text-muted-foreground hover:bg-black/5 dark:hover:bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+      <div 
+        className="absolute top-2 right-2"
+        onClick={(e) => e.stopPropagation()}
+        onPointerDown={(e) => e.stopPropagation()}
+      >
+        <Menu as="div" className="relative">
+          <MenuButton className="p-1.5 md:p-1.5 rounded-full text-foreground bg-background/80 hover:bg-background shadow-sm border border-black/10 dark:border-white/10 backdrop-blur-md opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all cursor-pointer">
             <MoreVerticalIcon className="w-5 h-5" />
           </MenuButton>
           <Transition
@@ -89,7 +93,7 @@ export function FolderCard({ folder, onClick, onRename, onDelete, onMove, onShar
         </Menu>
       </div>
 
-      <Folder01Icon className="w-16 h-16 text-amber-400 mb-4 fill-amber-400" />
+      <Folder01Icon className="w-12 h-12 md:w-16 md:h-16 text-amber-400 mb-3 md:mb-4 fill-amber-400" />
       <span className="text-sm font-medium text-foreground truncate w-full text-center">
         {folder.name}
       </span>
