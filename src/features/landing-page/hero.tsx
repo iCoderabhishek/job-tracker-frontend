@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight01Icon, PlayIcon } from "hugeicons-react";
-import { SIGNUP_URL } from "@/lib/env";
+import { DEMO_URL, SIGNUP_URL } from "@/lib/env";
 
 export function Hero() {
   return (
@@ -34,7 +34,12 @@ export function Hero() {
               Start for free
               <ArrowRight01Icon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link href="#demo" className="text-sm font-semibold leading-6 text-foreground hover:text-foreground/70 transition-colors flex items-center gap-2">
+            <Link
+              href={DEMO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-semibold leading-6 text-foreground hover:text-foreground/70 transition-colors flex items-center gap-2"
+            >
               <PlayIcon className="w-5 h-5" />
               Watch demo
             </Link>
@@ -49,15 +54,19 @@ export function Hero() {
           className="mt-20 sm:mt-24"
         >
           <div className="relative rounded-2xl bg-black/5 p-2 ring-1 ring-inset ring-black/10 lg:rounded-3xl lg:p-4 mx-auto max-w-5xl shadow-2xl">
-            <div className="rounded-xl bg-white ring-1 ring-black/5 overflow-hidden flex flex-col h-[400px] sm:h-[600px] shadow-sm">
-              <div className="h-12 border-b border-black/5 flex items-center px-4 gap-2 bg-gray-50/50">
+            <div className="rounded-xl bg-white ring-1 ring-black/5 overflow-hidden flex flex-col shadow-sm">
+              <div className="h-12 border-b border-black/5 flex items-center px-4 gap-2 bg-gray-50/50 shrink-0">
                 <div className="w-3 h-3 rounded-full bg-red-400" />
                 <div className="w-3 h-3 rounded-full bg-amber-400" />
                 <div className="w-3 h-3 rounded-full bg-green-400" />
               </div>
-              <div className="flex-1 p-8 flex items-center justify-center bg-gray-50/20 relative overflow-hidden">
-                {/* Internal UI Mockup SVG - Premium Man with Cloud abstract concept */}
-                <img src="/assets/hero-illustration.svg" alt="Hero Illustration" width={240} height={240} className="absolute top-1/2 left-1/2  -translate-x-1/2 -translate-y-1/2" />
+              <div className="flex-1 bg-gray-50/20 relative overflow-hidden">
+                {/* Internal UI Mockup - Dashboard Screenshot */}
+                <img
+                  src="/assets/dashboard_screenshot.png"
+                  alt="Dropdesk Dashboard"
+                  className="w-full h-auto object-contain object-top block pointer-events-none"
+                />
               </div>
             </div>
           </div>

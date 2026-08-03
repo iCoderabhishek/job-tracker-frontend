@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Dropdesk Frontend
 
-## Getting Started
+The official frontend client for Dropdesk, a high-performance, collaborative media sharing workspace designed for teams. 
+This repository serves as the user-facing web application that securely interfaces with the [Dropdesk Backend Architecture](https://github.com/iCoderabhishek/Dropdesk).
 
-First, run the development server:
+## Links
+
+- **Live Demo**: https://dropdesk-test.0bhishek.com/
+- **Backend Repository**: https://github.com/iCoderabhishek/Dropdesk
+- **Video Walkthrough**: https://www.youtube.com/@0bhishekk
+
+## Overview
+
+Built with Next.js 16 and React 19, this client provides a highly responsive, real-time file management interface. It leverages a modern frontend stack to seamlessly handle isolated workspaces, role-based access control, and direct-to-cloud (S3) uploads without taxing the backend infrastructure. 
+
+### Key Features
+- **Direct-to-S3 Uploads**: Handles presigned URLs securely, transferring media directly to AWS without bottlenecking the main server.
+- **Dynamic Workspaces**: Instant context-switching between different isolated team workspaces.
+- **Optimized Performance**: Heavily cached data fetching with React Query (`@tanstack/react-query`).
+- **Modern UI/UX**: Sleek, fully responsive design powered by Tailwind CSS v4 and Framer Motion for micro-animations.
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS v4
+- **State & Data Fetching**: Zustand, React Query
+- **Icons & Animations**: HugeIcons, Framer Motion
+- **Package Manager**: pnpm
+
+## Local Development Setup
+
+### Prerequisites
+- Node.js (v20+)
+- pnpm
+- Docker & Docker Compose (optional, for containerized local dev)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/iCoderabhishek/Dropdesk-Frontend.git
+   cd client-dropdesk
+   pnpm install
+   ```
+
+2. **Environment Configuration**
+   Create a `.env` file in the root directory. Configure `NEXT_PUBLIC_API_URL` to point to your backend API instance.
+
+3. **Start the Development Server**
+   ```bash
+   pnpm dev
+   ```
+   The application will be accessible at [http://localhost:3000](http://localhost:3000).
+
+## Run with Docker
+
+You can easily spin up the frontend using Docker Compose:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker-compose up --build -d
 ```
+The app will run in production mode and map to port `3000`. Ensure you have configured the correct backend URL in the `docker-compose.yaml` environment block.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Contribution
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Contributions are always welcome! Since this is part of a decoupled system:
+1. Ensure any new API endpoints are tested against the [Dropdesk Backend](https://github.com/iCoderabhishek/Dropdesk).
+2. Follow standard React/Next.js best practices.
+3. Open a Pull Request with a clear description of the feature or fix.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## License
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the ISC License.
