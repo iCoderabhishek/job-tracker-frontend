@@ -57,8 +57,8 @@ export function DeleteModal({ isOpen, onClose, item, type }: DeleteModalProps) {
             </div>
 
             <div className="p-6">
-              <p className="text-sm text-foreground">
-                Are you sure you want to delete <span className="font-semibold">{item.name}</span>?
+              <p className="text-sm text-foreground break-words">
+                Are you sure you want to delete <span className="font-semibold break-all">{item.name}</span>?
                 {type === "folder" ? " This will also delete all contained files." : " This will move the file to the trash bin."}
               </p>
               

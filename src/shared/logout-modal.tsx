@@ -20,11 +20,10 @@ export function LogoutModal({ isOpen, onClose }: LogoutModalProps) {
     setIsLoggingOut(true);
     try {
       await logout();
-      router.push("/");
+      window.location.href = "/";
     } catch (err) {
       console.error(err);
-      setIsLoggingOut(false);
-      onClose();
+      window.location.href = "/";
     }
   };
 
