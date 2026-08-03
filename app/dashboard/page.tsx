@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useWorkspaceStore } from "@/features/workspaces/store";
 import { Folder, FileItem } from "@/types";
 import { FolderCard } from "@/features/files/components/folder-card";
@@ -21,7 +21,7 @@ import { API_BASE_URL } from "@/lib/client";
 import { useFolderContents } from "@/features/folders/hooks";
 import { useMoveFile, useTogglePublicStatus } from "@/features/files/hooks";
 
-export default function DashboardPage() {
+function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -405,5 +405,20 @@ export default function DashboardPage() {
         </>
       )}
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex-1 flex items-center justify-center p-8 bg-background">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="w-12 h-12 rounded-full bg-black/5 mb-4"></div>
+          <p className="text-muted-foreground text-sm">Loading dashboard...</p>
+        </div>
+      </div>
+    }>
+      <DashboardContent />
+    </Suspense>
   );
 }
