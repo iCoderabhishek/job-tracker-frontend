@@ -18,10 +18,10 @@ apiClient.interceptors.response.use(
       // If we are not already on the login page or an invite link, redirect
       if (
         typeof window !== "undefined" &&
-        !window.location.pathname.startsWith("/login") &&
+        window.location.pathname !== "/" &&
         !window.location.pathname.startsWith("/invite")
       ) {
-        window.location.href = "/login";
+        window.location.href = "/";
       }
     }
     return Promise.reject(error);
