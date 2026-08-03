@@ -7,8 +7,9 @@ export async function GET(
 ) {
   const { path } = await params;
   
+  const backendUrl = process.env.BACKEND_API_URL || "http://localhost:8000";
   // Construct the target API url
-  const targetUrl = `${API_BASE_URL}/${path.join("/")}`;
+  const targetUrl = `${backendUrl}/api/v1/${path.join("/")}`;
   
   // Create headers from the original request
   const requestHeaders = new Headers(request.headers);
