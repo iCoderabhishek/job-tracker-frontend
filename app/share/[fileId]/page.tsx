@@ -10,7 +10,8 @@ export default async function PublicSharePage({ params }: { params: Promise<{ fi
   let contentType = "application/octet-stream";
   let isValid = false;
 
-  let streamUrl = `${API_BASE_URL}/files/public/${fileId}/stream`;
+  const backendUrl = process.env.BACKEND_API_URL || "http://localhost:8000";
+  let streamUrl = `${backendUrl}/api/v1/files/public/${fileId}/stream`;
   let serverFetchUrl = streamUrl;
 
   // Node.js 18+ fetch prefers IPv6 ::1, which can fail if backend binds to 127.0.0.1 (IPv4).
