@@ -12,7 +12,7 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     // 401 unauthenticated interceptor
     if (axios.isAxiosError(error) && error.response?.status === 401) {
       // If we are not already on the login page or an invite link, redirect
@@ -21,6 +21,11 @@ apiClient.interceptors.response.use(
         window.location.pathname !== "/" &&
         !window.location.pathname.startsWith("/invite")
       ) {
+        try {
+          await axios.post(`${API_BASE_URL}/auth/logout`, {}, { withCredentials: true });
+        } catch (err) {
+          console.error("Logout failed during 401 redirect", err);
+        }
         window.location.href = "/";
       }
     }
