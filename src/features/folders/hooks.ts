@@ -40,7 +40,17 @@ export function useCreateFolder(workspaceId: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ name, parentId }: { name: string; parentId?: string | null }) => createFolder(workspaceId, name, parentId),
-    onSuccess: (_, variables) => {
+    onSuccess: (data, variables) => {
+      queryClient.setQueryData(
+        ["folder-contents", workspaceId, variables.parentId || null],
+        (oldData: any) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            folders: [...(oldData.folders || []), data.folder],
+          };
+        }
+      );
       queryClient.invalidateQueries({ queryKey: ["folder-contents", workspaceId, variables.parentId || null] });
     }
   });

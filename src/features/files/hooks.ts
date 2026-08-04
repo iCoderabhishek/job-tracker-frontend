@@ -39,7 +39,17 @@ export function useUploadFile(workspaceId: string) {
       
       return confirmedFile;
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (confirmedFile, variables) => {
+      queryClient.setQueryData(
+        ["folder-contents", workspaceId, variables.folderId || null],
+        (oldData: any) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            files: [...(oldData.files || []), confirmedFile],
+          };
+        }
+      );
       queryClient.invalidateQueries({ queryKey: ["folder-contents", workspaceId, variables.folderId || null] });
       queryClient.invalidateQueries({ queryKey: ["search-contents", workspaceId] });
     },
