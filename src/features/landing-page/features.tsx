@@ -31,12 +31,12 @@ export function Features() {
     <div id="features" className="py-24 sm:py-32 bg-white">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-base font-semibold leading-7 text-primary/70 uppercase tracking-widest">Built for teams</h2>
+          <h2 className="text-base font-semibold leading-7 text-primary/70 uppercase tracking-widest">Built for Job Seekers</h2>
           <p className="mt-2 text-4xl font-serif tracking-tight text-foreground sm:text-6xl text-balance">
-            Everything you need, nothing you don't.
+            Your complete job application command center.
           </p>
           <p className="mt-6 text-lg leading-8 text-muted-foreground">
-            We removed the clutter and focused on what matters most: speed, security, and simplicity.
+            We automated the boring parts of job hunting so you can focus on passing interviews.
           </p>
         </div>
 
@@ -56,20 +56,20 @@ export function Features() {
                   <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center">
                      <CloudUploadIcon className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="text-3xl font-serif font-medium text-foreground">Effortless Synchronization</h3>
+                  <h3 className="text-3xl font-serif font-medium text-foreground">AI-Powered Job Matching</h3>
                 </div>
                 <p className="text-lg text-muted-foreground mb-8">
-                  Your files are available everywhere, instantly. No more waiting for clunky desktop clients to catch up. Dropdesk syncs your entire workspace at the speed of thought.
+                  Our agents scrape top job boards 24/7 and use advanced LLMs to score jobs against your resume. Instantly see which roles you're a 90%+ match for.
                 </p>
                 <ul className="space-y-4 text-foreground/80 font-medium">
                   <li className="flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary" /> Unlimited file size
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary" /> Automated scraping from top ATS platforms
                   </li>
                   <li className="flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary" /> Block-level sync for speed
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary" /> Semantic matching against your skills
                   </li>
                   <li className="flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary" /> Version history
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary" /> Daily digest of top roles
                   </li>
                 </ul>
               </motion.div>
@@ -82,7 +82,7 @@ export function Features() {
                 className="relative aspect-square rounded-[2rem] bg-gray-50 flex items-center justify-center overflow-hidden border border-black/5"
               >
                 {/* Custom Rich SVG Illustration for Sync */}
-                <img src="/assets/sync-illustration.svg" alt="Sync Illustration" width={400} height={400} />
+                <div className="w-full h-full bg-gradient-to-br from-primary/10 to-transparent flex items-center justify-center text-primary font-bold text-4xl">AI MATCHING</div>
               </motion.div>
             </div>
 
@@ -96,7 +96,7 @@ export function Features() {
                 className="relative aspect-square rounded-[2rem] bg-gray-50 flex items-center justify-center overflow-hidden border border-black/5 lg:order-1 order-2"
               >
                 {/* Custom Rich SVG Illustration for Team */}
-                <img src="/assets/team-illustration.svg" alt="Team Illustration" width={400} height={400} />
+                <div className="w-full h-full bg-gradient-to-tr from-green-400/10 to-transparent flex items-center justify-center text-green-700 font-bold text-4xl">SMART TRACKER</div>
               </motion.div>
 
               <motion.div 
@@ -110,20 +110,20 @@ export function Features() {
                   <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center">
                      <UserGroupIcon className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="text-3xl font-serif font-medium text-foreground">Team Workspaces</h3>
+                  <h3 className="text-3xl font-serif font-medium text-foreground">Smart Kanban Tracker</h3>
                 </div>
                 <p className="text-lg text-muted-foreground mb-8">
-                  Create isolated spaces for different departments, projects, or clients. Granular permissions mean people only see what they need to see.
+                  Never lose track of an application again. Our Excel-like tracker lets you monitor statuses, update resumes, and keep notes in one dense, high-productivity view.
                 </p>
                 <ul className="space-y-4 text-foreground/80 font-medium">
                   <li className="flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary" /> Shared team folders
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary" /> Excel-like data table view
                   </li>
                   <li className="flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary" /> Activity tracking
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary" /> Custom application statuses
                   </li>
                   <li className="flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary" /> Commenting & approvals
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary" /> One-click resume tailoring
                   </li>
                 </ul>
               </motion.div>

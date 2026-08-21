@@ -29,7 +29,7 @@ export function Footer() {
           </div>
         </nav>
         <div className="mt-10 flex justify-center space-x-10">
-          <Link href="https://github.com/iCoderabhishek/DropDesk" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+          <Link href="https://github.com/iCoderabhishek/jtracker" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
             <span className="sr-only">GitHub</span>
             <GithubIcon className="h-6 w-6" aria-hidden="true" />
           </Link>
@@ -40,7 +40,7 @@ export function Footer() {
         </div>
         <div className="mt-10 flex flex-col items-center gap-2">
           <p className="text-center text-sm leading-5 text-muted-foreground">
-            &copy; {new Date().getFullYear()} Dropdesk Inc. All rights reserved.
+            &copy; {new Date().getFullYear()} jtracker Inc. All rights reserved.
           </p>
           <p className="text-center text-xs leading-5 text-muted-foreground">
             built with ♡ྀི ₊ by <a href="https://0bhishek.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors underline underline-offset-4">Abhishek</a> ✌︎㋡
