@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Sidebar } from "@/shared/sidebar";
 import { Menu01Icon, Cancel01Icon } from "hugeicons-react";
 import { GlobalSearchModal } from "@/shared/global-search-modal";
+import { useCurrentUser } from "@/features/auth/hooks";
 
 export default function DashboardLayout({
   children,
@@ -11,6 +12,34 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { data: currentUser, isLoading } = useCurrentUser();
+  
+  const [sidebarWidth, setSidebarWidth] = useState(256); // w-64
+  const [isResizing, setIsResizing] = useState(false);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isResizing) return;
+      let newWidth = e.clientX;
+      if (newWidth < 200) newWidth = 200;
+      if (newWidth > 500) newWidth = 500;
+      setSidebarWidth(newWidth);
+    };
+    
+    const handleMouseUp = () => {
+      setIsResizing(false);
+    };
+
+    if (isResizing) {
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+    }
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isResizing]);
+
 
   return (
     <div className="flex h-screen overflow-hidden bg-muted/30">
@@ -23,11 +52,26 @@ export default function DashboardLayout({
       )}
       
       {/* Sidebar - hidden on mobile unless toggled */}
-      <div className={`
-        fixed inset-y-0 left-0 z-50 transform transition-transform duration-200 ease-in-out md:relative md:translate-x-0
-        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
-      `}>
-        <Sidebar onNavigate={() => setIsSidebarOpen(false)} />
+      <div 
+        className={`
+          fixed inset-y-0 left-0 z-50 transform transition-transform duration-0 ease-in-out md:relative md:translate-x-0 flex shrink-0
+          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+          ${isResizing ? "select-none" : "transition-transform duration-200"}
+        `}
+        style={{ width: sidebarWidth }}
+      >
+        <div className="flex-1 w-full overflow-hidden">
+          <Sidebar onNavigate={() => setIsSidebarOpen(false)} />
+        </div>
+        
+        {/* Resizer Handle */}
+        <div 
+          className="w-1 cursor-col-resize hover:bg-blue-500/50 active:bg-blue-500 transition-colors z-50 shrink-0 border-r border-black/5 dark:border-white/5"
+          onMouseDown={(e) => {
+            e.preventDefault();
+            setIsResizing(true);
+          }}
+        />
         
         {/* Mobile close button inside sidebar area */}
         <button 
@@ -47,7 +91,7 @@ export default function DashboardLayout({
           >
             <Menu01Icon className="w-6 h-6" />
           </button>
-          <span className="ml-4 font-bold text-lg text-foreground tracking-tight">dropdesk</span>
+          <span className="ml-4 font-bold text-lg text-foreground tracking-tight">jtracker</span>
         </div>
         
         {children}
