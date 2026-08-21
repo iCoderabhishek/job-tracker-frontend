@@ -1,12 +1,12 @@
-# Dropdesk Frontend
+# jtracker Frontend
 
-The official frontend client for Dropdesk, a high-performance, collaborative media sharing workspace designed for teams. 
-This repository serves as the user-facing web application that securely interfaces with the [Dropdesk Backend Architecture](https://github.com/iCoderabhishek/Dropdesk).
+The official frontend client for jtracker, a high-performance, collaborative media sharing workspace designed for teams. 
+This repository serves as the user-facing web application that securely interfaces with the [jtracker Backend Architecture](https://github.com/iCoderabhishek/jtracker).
 
 ## Links
 
-- **Live Demo**: https://dropdesk-test.0bhishek.com/
-- **Backend Repository**: https://github.com/iCoderabhishek/Dropdesk
+- **Live Demo**: https://jtracker-test.0bhishek.com/
+- **Backend Repository**: https://github.com/iCoderabhishek/jtracker
 - **Video Walkthrough**: https://www.youtube.com/@0bhishekk
 
 ## Overview
@@ -39,8 +39,8 @@ Built with Next.js 16 and React 19, this client provides a highly responsive, re
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/iCoderabhishek/Dropdesk-Frontend.git
-   cd client-dropdesk
+   git clone https://github.com/iCoderabhishek/jtracker-Frontend.git
+   cd client-jtracker
    pnpm install
    ```
 
@@ -65,7 +65,7 @@ The app will run in production mode and map to port `3000`. Ensure you have conf
 ## Contribution
 
 Contributions are always welcome! Since this is part of a decoupled system:
-1. Ensure any new API endpoints are tested against the [Dropdesk Backend](https://github.com/iCoderabhishek/Dropdesk).
+1. Ensure any new API endpoints are tested against the [jtracker Backend](https://github.com/iCoderabhishek/jtracker).
 2. Follow standard React/Next.js best practices.
 3. Open a Pull Request with a clear description of the feature or fix.
 

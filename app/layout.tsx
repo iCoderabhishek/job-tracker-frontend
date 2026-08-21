@@ -3,6 +3,7 @@ import { Inter, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/shared/theme-provider";
 import { Providers } from "@/lib/query-provider";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -17,8 +18,8 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "Dropdesk - Share media with your team seamlessly",
-  description: "Dropdesk is like Google Drive/Dropbox for workspaces.",
+  title: "jtracker - Your AI-Powered Job Hunt on Autopilot",
+  description: "jTracker automates your job hunt with AI.",
 };
 
 export default function RootLayout({
@@ -36,6 +37,7 @@ export default function RootLayout({
         <Providers>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             {children}
+            <Toaster position="bottom-right" toastOptions={{ className: 'dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100' }} />
           </ThemeProvider>
         </Providers>
       </body>
