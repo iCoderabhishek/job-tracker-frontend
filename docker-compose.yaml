@@ -1,13 +1,13 @@
 version: '3.8'
 
 services:
-  dropdesk-frontend:
+  jtracker-frontend:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
     environment:
-      # Ensure this points to where the Dropdesk Backend is running
+      # Ensure this points to where the jtracker Backend is running
       - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
     restart: unless-stopped

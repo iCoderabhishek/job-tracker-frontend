@@ -1,5 +1,5 @@
 {
-  "name": "client-dropdesk",
+  "name": "ai-job-tracker",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -12,6 +12,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.10",
     "@tanstack/react-query": "^5.101.4",
+    "@tanstack/react-table": "^8.20.5",
     "axios": "^1.19.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.43.0",
@@ -20,6 +21,7 @@
     "next-themes": "^0.4.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "sonner": "^2.0.8",
     "tailwind-merge": "^3.6.0",
     "zod": "^4.4.3",
     "zustand": "^5.0.14"
@@ -35,6 +37,6 @@
     "typescript": "^5"
   },
   "author": "Abhishek Jha",
-  "description": "Share media with your team seamlessly.",
+  "description": "Your AI-Powered Job Hunt on Autopilot.",
   "license": "ISC"
 }
