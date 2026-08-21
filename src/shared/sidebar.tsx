@@ -3,59 +3,73 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { jobsApi } from "@/api/jobs";
 import {
   Folder01Icon,
   Search01Icon,
-  UserGroupIcon,
   Moon02Icon,
   Sun03Icon,
-  Delete02Icon,
   Logout01Icon,
   Settings02Icon,
-  UserAdd01Icon,
   Download04Icon,
+  Loading02Icon,
+  DashboardSquare01Icon,
+  Globe02Icon,
+  PinLocation01Icon
 } from "hugeicons-react";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
-import { WorkspaceSelector } from "@/features/workspaces/components/workspace-selector";
-import { logout } from "@/features/auth/api.auth";
 import { useRouter } from "next/navigation";
-import { InviteModal } from "@/features/workspaces/components/invite-modal";
-import { useWorkspaceStore } from "@/features/workspaces/store";
 import { useCurrentUser } from "@/features/auth/hooks";
 import { LogoutModal } from "@/shared/logout-modal";
+import { toast } from "sonner";
 
 const mainNav = [
-  { name: "File Manager", href: "/dashboard", icon: Folder01Icon },
-  { name: "Members", href: "/dashboard/members", icon: UserGroupIcon },
-  { name: "Search", href: "/dashboard/search", icon: Search01Icon },
-  { name: "Exports", href: "/dashboard/exports", icon: Download04Icon },
-  { name: "Trash", href: "/dashboard/trash", icon: Delete02Icon },
+  { name: "Overview", href: "/dashboard", icon: DashboardSquare01Icon, exact: true },
+  { name: "Global Jobs", href: "/dashboard/global", icon: Globe02Icon },
+  { name: "Regional Jobs", href: "/dashboard/regional", icon: PinLocation01Icon },
+  { name: "Resumes", href: "/dashboard/resumes", icon: Download04Icon },
 ];
 
 export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { activeWorkspaceId, workspaces } = useWorkspaceStore();
   const { data: currentUser } = useCurrentUser();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
-  const [isInviteOpen, setIsInviteOpen] = useState(false);
+  const [syncLimit, setSyncLimit] = useState<number | "all">(10);
+  const queryClient = useQueryClient();
+
+  const syncMutation = useMutation({
+    mutationFn: async () => {
+      if (!currentUser?.id) throw new Error("Not authenticated");
+      return jobsApi.syncJobs(currentUser.id, syncLimit);
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["job-matches"] });
+      queryClient.invalidateQueries({ queryKey: ["job-metrics"] });
+    },
+    onError: (err: any) => {
+      if (err.response?.status === 403 && err.response?.data?.detail) {
+        toast.error(`Rate Limit: ${err.response.data.detail}`);
+      } else {
+        toast.error("Failed to sync new jobs. Please try again.");
+      }
+    }
+  });
 
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  const activeWorkspace = workspaces.find((w) => w.id === activeWorkspaceId);
-  const isOwner = currentUser?.userId && activeWorkspace?.ownerId === currentUser.userId;
 
   const handleLogoutClick = () => {
     setIsLogoutModalOpen(true);
   };
 
   return (
-    <div className="w-64 h-screen bg-background border-r border-black/5 dark:border-white/5 flex flex-col flex-shrink-0">
+    <div className="w-full h-screen bg-background border-r border-black/5 dark:border-white/5 flex flex-col flex-shrink-0">
       <div className="h-16 flex items-center px-6">
         <Link href="/" className="flex items-center gap-2 group">
           <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
@@ -64,20 +78,16 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
             <path d="M16 10V22" stroke="var(--color-primary-foreground)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           <span className="font-bold text-lg text-foreground tracking-tight group-hover:opacity-80 transition-opacity">
-            dropdesk
+            jtracker
           </span>
         </Link>
-      </div>
-
-      <div className="px-4 pb-4 border-b border-black/5 dark:border-white/5">
-        <WorkspaceSelector />
       </div>
 
       <div className="flex-1 overflow-y-auto py-6 flex flex-col gap-8 px-4">
         {/* Main Nav */}
         <nav className="flex flex-col space-y-1">
           {mainNav.map((item) => {
-            const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
+            const isActive = item.exact ? pathname === item.href : (pathname === item.href || pathname?.startsWith(item.href + "/"));
             return (
               <Link
                 key={item.name}
@@ -94,42 +104,55 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                   <item.icon className="h-5 w-5" />
                   {item.name}
                 </div>
-                {item.name === "Search" && (
-                  <kbd className="hidden md:inline-flex items-center gap-1 shrink-0 text-[10px] text-muted-foreground/60 group-hover:text-muted-foreground bg-black/5 dark:bg-white/5 px-1.5 py-0.5 rounded border border-black/10 dark:border-white/10 font-mono transition-colors">
-                    <span className="text-[11px]">⌘</span>K
-                  </kbd>
-                )}
               </Link>
             );
           })}
         </nav>
 
         {/* Action Button */}
-        {isOwner && (
-          <div className="px-3 mb-6">
-            <button 
-              onClick={() => setIsInviteOpen(true)}
-              className="w-full flex items-center justify-center gap-2 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-foreground px-4 py-2 rounded-xl text-sm font-medium transition-colors border border-black/5 dark:border-white/5"
+        <div className="px-3 mb-6 flex flex-col gap-2">
+          <div className="flex items-center justify-between gap-2 px-1">
+            <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Fetch Global</span>
+            <select
+              value={syncLimit}
+              onChange={(e) => setSyncLimit(e.target.value === "all" ? "all" : Number(e.target.value))}
+              className="text-xs bg-black/5 dark:bg-white/5 rounded px-2 py-0.5 outline-none text-foreground font-medium cursor-pointer border border-black/10 dark:border-white/10"
             >
-              <UserAdd01Icon className="h-4 w-4" />
-              Invite Members
-            </button>
+              <option value={10} className="bg-background">10 Jobs</option>
+              <option value={50} className="bg-background">50 Jobs</option>
+              <option value={100} className="bg-background">100 Jobs</option>
+              <option value="all" className="bg-background">All Jobs</option>
+            </select>
           </div>
-        )}
+          <button 
+            onClick={() => syncMutation.mutate()}
+            disabled={syncMutation.isPending || !currentUser?.id}
+            className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-xl text-sm font-medium transition-colors disabled:opacity-50"
+          >
+            {syncMutation.isPending ? (
+              <Loading02Icon className="h-4 w-4 animate-spin" />
+            ) : (
+              <Search01Icon className="h-4 w-4" />
+            )}
+            {syncMutation.isPending ? "Syncing..." : "Fetch New Jobs"}
+          </button>
+        </div>
       </div>
 
       {/* Footer controls */}
       <div className="p-4 border-t border-black/5 dark:border-white/5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1">
-            <Link
-              href="/dashboard/settings"
+            <button
+              onClick={() => {
+                router.push('/dashboard/settings');
+                onNavigate?.();
+              }}
               className="p-2 rounded-lg text-muted-foreground hover:bg-black/5 dark:hover:bg-white/5 hover:text-foreground transition-colors"
               title="Settings"
-              onClick={() => onNavigate?.()}
             >
               <Settings02Icon className="w-5 h-5" />
-            </Link>
+            </button>
             {mounted && (
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -149,12 +172,6 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
           </button>
         </div>
       </div>
-
-      <InviteModal
-        isOpen={isInviteOpen}
-        onClose={() => setIsInviteOpen(false)}
-        onSuccess={() => setIsInviteOpen(false)}
-      />
 
       <LogoutModal
         isOpen={isLogoutModalOpen}

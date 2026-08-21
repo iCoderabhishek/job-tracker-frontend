@@ -4,7 +4,7 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Logout01Icon } from "hugeicons-react";
 import { useState } from "react";
-import { logout } from "@/features/auth/api.auth";
+import { useLogout } from "@/features/auth/hooks";
 import { useRouter } from "next/navigation";
 
 interface LogoutModalProps {
@@ -15,15 +15,15 @@ interface LogoutModalProps {
 export function LogoutModal({ isOpen, onClose }: LogoutModalProps) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const router = useRouter();
+  const logout = useLogout();
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      await logout();
-      window.location.href = "/";
+      logout();
     } catch (err) {
       console.error(err);
-      window.location.href = "/";
+      logout();
     }
   };
 
@@ -60,7 +60,7 @@ export function LogoutModal({ isOpen, onClose }: LogoutModalProps) {
                 </DialogTitle>
                 <div className="mt-2">
                   <p className="text-sm text-muted-foreground">
-                    Are you sure you want to sign out? You will need to log back in to access your workspaces and files.
+                    Are you sure you want to sign out? You will need to log back in to access your dashboard.
                   </p>
                 </div>
 

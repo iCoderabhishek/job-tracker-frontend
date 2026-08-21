@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search01Icon, Folder01Icon, File01Icon } from "hugeicons-react";
-import { useWorkspaceStore } from "@/features/workspaces/store";
-import { searchFiles } from "@/features/files/api.files";
 import { FileItem } from "@/types";
 import { useRouter } from "next/navigation";
 
@@ -14,7 +12,6 @@ export function GlobalSearchModal() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<FileItem[]>([]);
   const [loading, setLoading] = useState(false);
-  const { activeWorkspaceId } = useWorkspaceStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -36,7 +33,7 @@ export function GlobalSearchModal() {
   }, [isOpen]);
 
   useEffect(() => {
-    if (!query.trim() || !activeWorkspaceId) {
+    if (!query.trim()) {
       setResults([]);
       return;
     }
@@ -44,8 +41,8 @@ export function GlobalSearchModal() {
     const delayDebounceFn = setTimeout(async () => {
       setLoading(true);
       try {
-        const { files } = await searchFiles(activeWorkspaceId, query);
-        setResults(files.slice(0, 10)); // Top 10 results inline
+        // Mock search or remove if unused
+        setResults([]); 
       } catch (error) {
         console.error("Search failed", error);
       } finally {
@@ -54,7 +51,7 @@ export function GlobalSearchModal() {
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [query, activeWorkspaceId]);
+  }, [query]);
 
   const handleSelect = (item: FileItem) => {
     setIsOpen(false);
