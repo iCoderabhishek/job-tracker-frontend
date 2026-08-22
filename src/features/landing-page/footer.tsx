@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { GithubIcon, TwitterIcon } from "hugeicons-react";
-import { SIGNUP_URL } from "@/lib/env";
 
 export function Footer() {
   return (
@@ -23,7 +22,7 @@ export function Footer() {
             </Link>
           </div>
           <div className="pb-6">
-            <Link href={SIGNUP_URL} className="text-sm leading-6 text-foreground hover:text-foreground/70 transition-colors font-medium">
+            <Link href="/login" className="text-sm leading-6 text-foreground hover:text-foreground/70 transition-colors font-medium">
               Log in
             </Link>
           </div>

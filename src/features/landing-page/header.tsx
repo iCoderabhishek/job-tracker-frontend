@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Menu01Icon } from "hugeicons-react";
 import { useState } from "react";
-import { SIGNUP_URL } from "@/lib/env";
 
 export function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

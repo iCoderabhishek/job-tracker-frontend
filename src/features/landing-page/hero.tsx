@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight01Icon, PlayIcon } from "hugeicons-react";
-import { DEMO_URL, SIGNUP_URL } from "@/lib/env";
+import { DEMO_URL } from "@/lib/env";
 
 export function Hero() {
   return (
