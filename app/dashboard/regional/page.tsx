@@ -17,6 +17,7 @@ function RegionalJobsContent() {
 
   const [regionInput, setRegionInput] = useState(queryRegion);
   const [activeRegion, setActiveRegion] = useState(queryRegion);
+  const [syncLimit, setSyncLimit] = useState<number | "all">(50);
   const { data: currentUser } = useCurrentUser();
   const queryClient = useQueryClient();
 
@@ -39,7 +40,7 @@ function RegionalJobsContent() {
     mutationFn: async () => {
       if (!currentUser?.id) throw new Error("Not authenticated");
       if (!regionInput) throw new Error("Please enter a region");
-      return jobsApi.syncJobs(currentUser.id, "all", regionInput);
+      return jobsApi.syncJobs(currentUser.id, syncLimit, regionInput);
     },
     onSuccess: () => {
       updateUrl(regionInput);
@@ -92,6 +93,17 @@ function RegionalJobsContent() {
           >
             Get Matches
           </button>
+          
+          <select
+            value={syncLimit}
+            onChange={(e) => setSyncLimit(e.target.value === "all" ? "all" : Number(e.target.value))}
+            className="px-3 py-2 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-foreground text-sm font-medium rounded-xl transition-colors shrink-0 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+          >
+            <option value={10} className="bg-background">10 Jobs</option>
+            <option value={50} className="bg-background">50 Jobs</option>
+            <option value={100} className="bg-background">100 Jobs</option>
+            <option value="all" className="bg-background">All Jobs</option>
+          </select>
           
           <button
             onClick={() => syncMutation.mutate()}
