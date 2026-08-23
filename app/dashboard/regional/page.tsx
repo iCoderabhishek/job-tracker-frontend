@@ -1,18 +1,39 @@
 "use client";
 
 import { JobTrackerTable } from "@/features/jobs/JobTrackerTable";
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { jobsApi } from "@/api/jobs";
 import { useCurrentUser } from "@/features/auth/hooks";
 import { Search01Icon, Loading02Icon, Location01Icon } from "hugeicons-react";
 import { toast } from "sonner";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
-export default function RegionalJobsPage() {
-  const [regionInput, setRegionInput] = useState("");
-  const [activeRegion, setActiveRegion] = useState("");
+function RegionalJobsContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const queryRegion = searchParams.get("region") || "";
+
+  const [regionInput, setRegionInput] = useState(queryRegion);
+  const [activeRegion, setActiveRegion] = useState(queryRegion);
   const { data: currentUser } = useCurrentUser();
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    setRegionInput(queryRegion);
+    setActiveRegion(queryRegion);
+  }, [queryRegion]);
+
+  const updateUrl = (region: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (region) {
+      params.set("region", region);
+    } else {
+      params.delete("region");
+    }
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
 
   const syncMutation = useMutation({
     mutationFn: async () => {
@@ -21,7 +42,7 @@ export default function RegionalJobsPage() {
       return jobsApi.syncJobs(currentUser.id, "all", regionInput);
     },
     onSuccess: () => {
-      setActiveRegion(regionInput);
+      updateUrl(regionInput);
       queryClient.invalidateQueries({ queryKey: ["job-matches"] });
       queryClient.invalidateQueries({ queryKey: ["job-metrics"] });
       toast.success("Regional job sync started in the background! Please check back in a few minutes.");
@@ -37,7 +58,7 @@ export default function RegionalJobsPage() {
 
   const handleGetMatches = () => {
     if (regionInput) {
-      setActiveRegion(regionInput);
+      updateUrl(regionInput);
     }
   };
 
@@ -102,5 +123,13 @@ export default function RegionalJobsPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function RegionalJobsPage() {
+  return (
+    <Suspense fallback={<div className="flex-1 flex flex-col h-full bg-background overflow-hidden relative items-center justify-center"><Loading02Icon className="h-8 w-8 animate-spin text-muted-foreground" /></div>}>
+      <RegionalJobsContent />
+    </Suspense>
   );
 }

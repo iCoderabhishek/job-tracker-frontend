@@ -14,6 +14,7 @@ import {
   SortingState
 } from "@tanstack/react-table";
 import { useCurrentUser } from "@/features/auth/hooks";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 const statusColors: Record<string, string> = {
   notApplied: "bg-transparent text-foreground",
@@ -176,13 +177,33 @@ export function JobTrackerTable({ region }: { region?: string }) {
   const queryClient = useQueryClient();
   const { data: currentUser } = useCurrentUser();
   
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'created_at', desc: true } // Default sort by date
   ]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState<JobMatch | null>(null);
   
-  const [limit, setLimit] = useState<number | "all">(200);
+  const queryLimit = searchParams.get("limit");
+  const defaultLimit = queryLimit === "all" ? "all" : (queryLimit ? Number(queryLimit) : 200);
+  const [limit, setLimit] = useState<number | "all">(defaultLimit);
+
+  useEffect(() => {
+    const qLimit = searchParams.get("limit");
+    if (qLimit) {
+      setLimit(qLimit === "all" ? "all" : Number(qLimit));
+    }
+  }, [searchParams]);
+
+  const handleLimitChange = (newLimit: number | "all") => {
+    setLimit(newLimit);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("limit", String(newLimit));
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
 
   const { data: matches, isLoading, error } = useQuery({
     queryKey: ["job-matches", limit, currentUser?.id, region],
@@ -412,7 +433,7 @@ export function JobTrackerTable({ region }: { region?: string }) {
           <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">Show:</span>
           <select 
             value={limit} 
-            onChange={(e) => setLimit(e.target.value === "all" ? "all" : Number(e.target.value))}
+            onChange={(e) => handleLimitChange(e.target.value === "all" ? "all" : Number(e.target.value))}
             className="text-xs bg-black/5 dark:bg-white/5 rounded px-2 py-1 outline-none text-foreground font-medium cursor-pointer border border-black/10 dark:border-white/10"
           >
             <option value={50} className="bg-background">50 Jobs</option>

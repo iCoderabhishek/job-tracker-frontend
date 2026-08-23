@@ -1,8 +1,10 @@
 "use client";
 
 import { JobTrackerTable } from "@/features/jobs/JobTrackerTable";
+import { Suspense } from "react";
+import { Loading02Icon } from "hugeicons-react";
 
-export default function GlobalJobsPage() {
+function GlobalJobsContent() {
   return (
     <div className="flex-1 flex flex-col h-full bg-background overflow-hidden relative">
       {/* Header */}
@@ -15,5 +17,13 @@ export default function GlobalJobsPage() {
         <JobTrackerTable />
       </div>
     </div>
+  );
+}
+
+export default function GlobalJobsPage() {
+  return (
+    <Suspense fallback={<div className="flex-1 flex items-center justify-center h-full"><Loading02Icon className="h-8 w-8 animate-spin text-muted-foreground" /></div>}>
+      <GlobalJobsContent />
+    </Suspense>
   );
 }
