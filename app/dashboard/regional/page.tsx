@@ -24,6 +24,7 @@ export default function RegionalJobsPage() {
       setActiveRegion(regionInput);
       queryClient.invalidateQueries({ queryKey: ["job-matches"] });
       queryClient.invalidateQueries({ queryKey: ["job-metrics"] });
+      toast.success("Regional job sync started in the background! Please check back in a few minutes.");
     },
     onError: (err: any) => {
       if (err.response?.status === 403 && err.response?.data?.detail) {

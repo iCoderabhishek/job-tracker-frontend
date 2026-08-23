@@ -50,6 +50,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["job-matches"] });
       queryClient.invalidateQueries({ queryKey: ["job-metrics"] });
+      toast.success("Job sync started in the background! Please check back in a few minutes to see the latest matches.");
     },
     onError: (err: any) => {
       if (err.response?.status === 403 && err.response?.data?.detail) {
