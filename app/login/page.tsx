@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight01Icon, Mail01Icon, Loading02Icon, SparklesIcon } from "hugeicons-react";
+import { ArrowRight01Icon, Mail01Icon, Loading02Icon, SparklesIcon, Ticket01Icon } from "hugeicons-react";
 import { authApi } from "@/api/auth";
 import { useQueryClient } from "@tanstack/react-query";
 import { setStoredUserId } from "@/features/auth/hooks";
@@ -14,17 +14,25 @@ export default function LoginPage() {
   const queryClient = useQueryClient();
   const [step, setStep] = useState<"email" | "otp">("email");
   const [email, setEmail] = useState("");
+  const [inviteCode, setInviteCode] = useState("");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || !inviteCode.trim()) {
+      setError("An invite code is required to sign in.");
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
-      await authApi.loginOrSignup({ email, name: email.split('@')[0] });
+      await authApi.loginOrSignup({ 
+        email, 
+        name: email.split('@')[0],
+        invite_code: inviteCode.trim()
+      });
       setStep("otp");
     } catch (err: any) {
       setError(err?.response?.data?.detail || "Failed to send OTP. Try again.");
@@ -93,18 +101,37 @@ export default function LoginPage() {
                     onSubmit={handleSendOtp}
                     className="flex flex-col gap-6"
                   >
-                    <div>
-                      <label className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest mb-3 block ml-1">Email Address</label>
-                      <div className="relative group">
-                        <Mail01Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 group-focus-within:text-white transition-colors" />
-                        <input 
-                          type="email" 
-                          required
-                          value={email}
-                          onChange={e => setEmail(e.target.value)}
-                          placeholder="you@example.com"
-                          className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 hover:border-white/20 focus:border-white/30 focus:bg-white/10 rounded-2xl outline-none transition-all text-white placeholder:text-zinc-600 text-sm shadow-inner"
-                        />
+                    <div className="space-y-5">
+                      <div>
+                        <label className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest mb-3 block ml-1">Email Address</label>
+                        <div className="relative group">
+                          <Mail01Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 group-focus-within:text-white transition-colors" />
+                          <input 
+                            type="email" 
+                            required
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
+                            placeholder="you@example.com"
+                            className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 hover:border-white/20 focus:border-white/30 focus:bg-white/10 rounded-2xl outline-none transition-all text-white placeholder:text-zinc-600 text-sm shadow-inner"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <label className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest mb-3 flex items-center ml-1">
+                          Invite Code
+                        </label>
+                        <div className="relative group">
+                          <Ticket01Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 group-focus-within:text-white transition-colors" />
+                          <input 
+                            type="text" 
+                            required
+                            value={inviteCode}
+                            onChange={e => setInviteCode(e.target.value)}
+                            placeholder="e.g. ALPHA-2026"
+                            className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 hover:border-white/20 focus:border-white/30 focus:bg-white/10 rounded-2xl outline-none transition-all text-white placeholder:text-zinc-600 text-sm shadow-inner"
+                          />
+                        </div>
                       </div>
                     </div>
                     {error && <p className="text-sm text-red-500 font-medium ml-1">{error}</p>}
