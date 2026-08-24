@@ -15,6 +15,7 @@ import {
 } from "@tanstack/react-table";
 import { useCurrentUser } from "@/features/auth/hooks";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { jsPDF } from "jspdf";
 
 const statusColors: Record<string, string> = {
   notApplied: "bg-transparent text-foreground",
@@ -100,6 +101,38 @@ const EditableCell = ({
 
 // --- Drawer Component ---
 const ResumeDrawer = ({ isOpen, onClose, match, currentUser }: { isOpen: boolean; onClose: () => void; match: JobMatch | null; currentUser: any }) => {
+  const [resumeText, setResumeText] = useState(currentUser?.resumes || "");
+
+  useEffect(() => {
+    if (isOpen) setResumeText(currentUser?.resumes || "");
+  }, [isOpen, currentUser]);
+
+  const handleDownload = () => {
+    const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+    const margin = 40;
+    const pageHeight = doc.internal.pageSize.height;
+    
+    // Set a professional font
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+
+    // Split text into lines that fit the page width
+    const lines = doc.splitTextToSize(resumeText, doc.internal.pageSize.width - 2 * margin);
+    
+    let cursorY = margin;
+    for (let i = 0; i < lines.length; i++) {
+      if (cursorY > pageHeight - margin) {
+        doc.addPage();
+        cursorY = margin;
+      }
+      doc.text(lines[i], margin, cursorY);
+      cursorY += 15; // line height
+    }
+    
+    const fileName = (currentUser?.name || "resume").replace(/\s+/g, '_') + ".pdf";
+    doc.save(fileName);
+  };
+
   if (!match) return null;
 
   return (
@@ -149,7 +182,8 @@ const ResumeDrawer = ({ isOpen, onClose, match, currentUser }: { isOpen: boolean
                   </div>
                   <textarea 
                     className="flex-1 w-full p-4 text-[13px] text-foreground bg-transparent font-mono leading-relaxed resize-none outline-none custom-scrollbar"
-                    defaultValue={currentUser?.resumes || "No master resume found. Please update your profile settings."}
+                    value={resumeText}
+                    onChange={(e) => setResumeText(e.target.value)}
                     placeholder="Paste your master resume here..."
                   />
                 </div>
@@ -160,7 +194,7 @@ const ResumeDrawer = ({ isOpen, onClose, match, currentUser }: { isOpen: boolean
               <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-foreground bg-transparent border border-black/10 dark:border-white/10 rounded-md hover:bg-muted">
                 Cancel
               </button>
-              <button className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 shadow-sm">
+              <button onClick={handleDownload} className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 shadow-sm">
                 Save & Generate PDF
               </button>
             </div>
@@ -283,7 +317,7 @@ export function JobTrackerTable({ region }: { region?: string }) {
           {row.original.job.title}
         </div>
       ),
-      size: 250,
+      size: 200,
     }),
     columnHelper.accessor("status", {
       header: "Status",
@@ -391,7 +425,11 @@ export function JobTrackerTable({ region }: { region?: string }) {
   const table = useReactTable({
     data: matches || [],
     columns,
-    state: { sorting },
+    state: { 
+      sorting,
+      columnPinning: { left: ['created_at', 'company', 'role'] }
+    },
+    enableColumnPinning: true,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -444,21 +482,30 @@ export function JobTrackerTable({ region }: { region?: string }) {
         </div>
       </div>
       <div className="flex-1 w-full overflow-hidden flex flex-col bg-background">
-        <div className="overflow-auto flex-1 custom-scrollbar">
+        <div className="overflow-auto flex-1 custom-scrollbar relative">
           <table 
-            className="w-full text-left border-collapse" 
+            className="w-full text-left border-collapse table-fixed" 
             style={{ 
               width: table.getTotalSize(),
             }}
           >
-            <thead className="bg-muted/50 sticky top-0 z-10 shadow-sm backdrop-blur-md">
+            <thead className="bg-muted/80 sticky top-0 z-20 shadow-sm backdrop-blur-md">
               {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
-                  {headerGroup.headers.map(header => (
+                  {headerGroup.headers.map(header => {
+                    const isPinnedLeft = header.column.getIsPinned() === 'left';
+                    return (
                     <th 
                       key={header.id}
-                      style={{ width: header.getSize() }}
-                      className={`relative px-2 py-1.5 text-[11px] font-bold text-muted-foreground uppercase tracking-wider border border-black/10 dark:border-white/10 ${header.column.getCanSort() ? 'hover:bg-muted/80' : ''}`}
+                      style={{ 
+                        width: header.getSize(),
+                        ...(isPinnedLeft ? {
+                          position: 'sticky',
+                          left: header.column.getStart('left'),
+                          zIndex: 30
+                        } : {})
+                      }}
+                      className={`group/th relative px-2 py-1.5 text-[11px] font-bold text-muted-foreground uppercase tracking-wider border border-black/10 dark:border-white/10 ${header.column.getCanSort() ? 'hover:bg-muted/90' : ''} ${isPinnedLeft ? 'bg-muted/95 backdrop-blur-md border-r-black/20 dark:border-r-white/20' : ''}`}
                     >
                       <div 
                         className={`flex items-center gap-1 ${header.column.getCanSort() ? 'cursor-pointer select-none' : ''}`}
@@ -480,10 +527,12 @@ export function JobTrackerTable({ region }: { region?: string }) {
                       <div
                         onMouseDown={header.getResizeHandler()}
                         onTouchStart={header.getResizeHandler()}
-                        className={`absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none hover:bg-blue-500 ${header.column.getIsResizing() ? 'bg-blue-500' : 'bg-transparent'}`}
-                      />
+                        className={`absolute right-0 top-0 h-full w-4 translate-x-1/2 cursor-col-resize select-none touch-none z-40 flex justify-center`}
+                      >
+                        <div className={`w-[2px] h-full transition-colors ${header.column.getIsResizing() ? 'bg-blue-500' : 'bg-transparent group-hover/th:bg-blue-500/50'}`} />
+                      </div>
                     </th>
-                  ))}
+                  )})}
                 </tr>
               ))}
             </thead>
@@ -493,15 +542,26 @@ export function JobTrackerTable({ region }: { region?: string }) {
                   key={row.id}
                   className="hover:bg-black/5 dark:hover:bg-white/5 transition-colors group h-8"
                 >
-                  {row.getVisibleCells().map(cell => (
+                  {row.getVisibleCells().map(cell => {
+                    const isPinnedLeft = cell.column.getIsPinned() === 'left';
+                    return (
                     <td 
                       key={cell.id} 
-                      style={{ width: cell.column.getSize() }}
-                      className="p-0 border border-black/10 dark:border-white/10 align-middle relative overflow-hidden"
+                      style={{ 
+                        width: cell.column.getSize(),
+                        ...(isPinnedLeft ? {
+                          position: 'sticky',
+                          left: cell.column.getStart('left'),
+                          zIndex: 10
+                        } : {})
+                      }}
+                      className={`p-0 border border-black/10 dark:border-white/10 align-middle relative overflow-hidden ${
+                        isPinnedLeft ? 'bg-background group-hover:bg-black/5 dark:group-hover:bg-white/5 border-r-black/20 dark:border-r-white/20' : ''
+                      }`}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
-                  ))}
+                  )})}
                 </tr>
               ))}
             </tbody>
