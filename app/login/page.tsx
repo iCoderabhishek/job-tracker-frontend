@@ -21,8 +21,8 @@ export default function LoginPage() {
 
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !inviteCode.trim()) {
-      setError("An invite code is required to sign in.");
+    if (!email) {
+      setError("An email is required to sign in.");
       return;
     }
     setLoading(true);
@@ -125,7 +125,6 @@ export default function LoginPage() {
                           <Ticket01Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 group-focus-within:text-white transition-colors" />
                           <input 
                             type="text" 
-                            required
                             value={inviteCode}
                             onChange={e => setInviteCode(e.target.value)}
                             placeholder="e.g. ALPHA-2026"
