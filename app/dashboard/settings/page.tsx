@@ -110,14 +110,14 @@ export default function SettingsPage() {
             <div>
               <div className="flex justify-between items-end mb-2">
                 <label className="block text-sm font-semibold text-foreground">Job Search Goal</label>
-                <span className="text-[11px] text-muted-foreground font-medium">{goal.length} / 400</span>
+                <span className="text-[11px] text-muted-foreground font-medium">{goal.length} / 1000</span>
               </div>
               <textarea 
                 value={goal}
                 onChange={e => setGoal(e.target.value)}
                 placeholder="e.g. Senior Frontend Engineer, Remote, $150k+"
                 rows={3}
-                maxLength={400}
+                maxLength={1000}
                 className="w-full px-4 py-2 bg-background border border-black/10 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none"
               />
             </div>
