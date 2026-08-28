@@ -102,7 +102,13 @@ function RegionalJobsContent() {
             <option value={10} className="bg-background">10 Jobs</option>
             <option value={50} className="bg-background">50 Jobs</option>
             <option value={100} className="bg-background">100 Jobs</option>
-            <option value="all" className="bg-background">All Jobs</option>
+            <option value={200} className="bg-background">200 Jobs</option>
+            <option value={400} className="bg-background">400 Jobs</option>
+            <option value={600} className="bg-background">600 Jobs</option>
+            <option value={1000} className="bg-background">1000 Jobs</option>
+            {currentUser?.is_admin && (
+              <option value="all" className="bg-background">All Jobs</option>
+            )}
           </select>
           
           <button
